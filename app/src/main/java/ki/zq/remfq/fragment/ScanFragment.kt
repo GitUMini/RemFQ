@@ -115,7 +115,7 @@ class ScanFragment : Fragment() {
             }
             if (scanFlag) {
                 saveEdit()
-                val currentRealBean = scanViewModel.getCurrentRealBean()
+                val currentRealBean = scanViewModel.currentBeanLiveData
                 currentRealBean.value?.also { realBean ->
                     BaseUtil.checkFPData(realBean).apply {
                         if (length != 0) {

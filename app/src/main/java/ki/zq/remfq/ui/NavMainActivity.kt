@@ -30,7 +30,6 @@ class NavMainActivity : AppCompatActivity() {
         supportActionBar?.title = "台账助手"
 
         binding.viewPager2.apply {
-
             adapter = ViewPager2Adapter(this@NavMainActivity, fragments)
             BnvMediator(binding.bnv, this) { bnv, vp2 ->
                 vp2.isUserInputEnabled = true  //false:ViewPager2不能滑动
