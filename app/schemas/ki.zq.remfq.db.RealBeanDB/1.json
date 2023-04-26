@@ -1,0 +1,100 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a2e6e1023c4cc92bd677c9cb60f901dc",
+    "entities": [
+      {
+        "tableName": "INVOICE",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `fpToPerson` TEXT, `fpToCompany` TEXT, `fpCode` TEXT, `fpNumber` TEXT, `fpDate` INTEGER, `fpThing` TEXT, `fpFromCompanyCode` TEXT, `fpFromCompanyName` TEXT, `fpMoney` TEXT, `fpTax` TEXT, `fpAll` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpToPerson",
+            "columnName": "fpToPerson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpToCompany",
+            "columnName": "fpToCompany",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpCode",
+            "columnName": "fpCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpNumber",
+            "columnName": "fpNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpDate",
+            "columnName": "fpDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpThing",
+            "columnName": "fpThing",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpFromCompanyCode",
+            "columnName": "fpFromCompanyCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpFromCompanyName",
+            "columnName": "fpFromCompanyName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpMoney",
+            "columnName": "fpMoney",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpTax",
+            "columnName": "fpTax",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fpAll",
+            "columnName": "fpAll",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2e6e1023c4cc92bd677c9cb60f901dc')"
+    ]
+  }
+}

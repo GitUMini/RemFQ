@@ -1,0 +1,14 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/messages_header">
+
+        <EditTextPreference
+            app:defaultValue="报销人员姓名"
+            app:iconSpaceReserved="false"
+            app:key="toPerson"
+            app:title="@string/toPerson_title"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+</PreferenceScreen>
