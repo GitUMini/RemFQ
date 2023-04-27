@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +26,6 @@ import com.baidu.ocr.ui.camera.CameraActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import ki.zq.remfq.R
 import ki.zq.remfq.bean.FPBean
 import ki.zq.remfq.bean.RealBean
 import ki.zq.remfq.databinding.FragmentScanBinding
@@ -60,7 +58,7 @@ class ScanFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_scan, container, false)
+        _binding = FragmentScanBinding.inflate(inflater)
         scanViewModel = ViewModelProvider(requireActivity()).get(ScanViewModel::class.java)
         edtList = arrayListOf(
             binding.scanTietPerson,
@@ -77,10 +75,6 @@ class ScanFragment : Fragment() {
         )
 
         initView()
-        binding.scanViewModel = scanViewModel
-        binding.baseUtil = BaseUtil
-        binding.lifecycleOwner = requireActivity()
-
         setEditAble(false)
         return binding.root
     }
@@ -206,8 +200,9 @@ class ScanFragment : Fragment() {
         val gson = Gson()
         try {
             val fpBean = gson.fromJson(result, FPBean::class.java)
+            val resultBean = RealBean()
             scanViewModel.setCurrentRealBean(
-                RealBean().apply {
+                resultBean.apply {
                     fpToPerson = getToPerson()
                     fpToCompany = fpBean.words_result.purchaserName
                     fpCode = fpBean.words_result.invoiceCode.toString()
@@ -221,6 +216,9 @@ class ScanFragment : Fragment() {
                     fpAll = fpBean.words_result.amountInFiguers.toString()
                 })
             setEditAble(true)
+            for (i in 0 until edtList.size) {
+                edtList[i].setText(resultBean.toStringList()[i])
+            }
             scanFlag = true
             return true
         } catch (e: JsonSyntaxException) {
@@ -295,7 +293,6 @@ class ScanFragment : Fragment() {
                         try {
                             val resFlag = analysisResult(result)
                             if (resFlag) {
-                                binding.scanResultCv.visibility = View.VISIBLE
                                 run {
                                     show("扫描成功！")
                                 }

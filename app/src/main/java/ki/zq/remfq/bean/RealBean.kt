@@ -3,6 +3,7 @@ package ki.zq.remfq.bean
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ki.zq.remfq.util.BaseUtil
 
 @Entity(tableName = "INVOICE")
 class RealBean {
@@ -57,6 +58,22 @@ class RealBean {
                 ", \"fpTax\":\"" + fpTax + '\"' +
                 ", \"fpAll\":\"" + fpAll + '\"' +
                 '}'
+    }
+
+    fun toStringList(): MutableList<String?> {
+        return arrayListOf(
+            fpToPerson,
+            fpToCompany,
+            fpCode,
+            fpNumber,
+            BaseUtil.longToString(fpDate!!),
+            fpThing,
+            fpFromCompanyCode,
+            fpFromCompanyName,
+            fpMoney,
+            fpTax,
+            fpAll
+        )
     }
 
     override fun equals(other: Any?): Boolean {
