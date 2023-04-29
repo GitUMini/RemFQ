@@ -12,6 +12,6 @@ class HistoryViewModel(application: Application) : AndroidViewModel(application)
         realBeanDB?.ocrDao()
     }
 
-    fun getAllBeans() = ocrDao?.getAllBeans()
+    val allBeans = ocrDao?.getAllBeans()
     fun deleteBean(vararg realBean: RealBean) = ocrDao?.deleteBeans(*realBean)
 }

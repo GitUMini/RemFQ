@@ -31,8 +31,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_save_path" />
 
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/history_composeView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recv_search_result"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/space">
 
-    </androidx.compose.ui.platform.ComposeView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_search_output"

@@ -1,11 +1,11 @@
 package ki.zq.remfq.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -13,25 +13,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.baidu.ocr.sdk.OCR
-import com.baidu.ocr.sdk.OnResultListener
-import com.baidu.ocr.sdk.exception.OCRError
-import com.baidu.ocr.sdk.model.AccessToken
-import com.baidu.ocr.ui.camera.CameraActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import ki.zq.remfq.bean.FPBean
 import ki.zq.remfq.bean.RealBean
 import ki.zq.remfq.databinding.FragmentScanBinding
+import ki.zq.remfq.enums.EnumSaveFlag
 import ki.zq.remfq.model.ScanViewModel
-import ki.zq.remfq.ocr.FileUtil
-import ki.zq.remfq.ocr.RecognizeService
+import ki.zq.remfq.ocr.Base64Util
+import ki.zq.remfq.ocr.HttpUtil
 import ki.zq.remfq.util.BaseUtil
 import ki.zq.remfq.util.LoadingDialog
 import kotlinx.coroutines.Dispatchers
@@ -43,13 +41,10 @@ class ScanFragment : Fragment() {
     private var _binding: FragmentScanBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var scanViewModel: ScanViewModel
+    private val scanViewModel by viewModels<ScanViewModel>()
     private lateinit var edtList: MutableList<EditText>
     private lateinit var loadingDialog: LoadingDialog
-
-    private val requestCodeVatInvoice = 131
-    private var hasGotToken = false
-    private val alertDialog: AlertDialog.Builder? = null
+    private lateinit var galleryResultLauncher: ActivityResultLauncher<Intent>
 
     private var scanFlag = false
 
@@ -59,7 +54,6 @@ class ScanFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentScanBinding.inflate(inflater)
-        scanViewModel = ViewModelProvider(requireActivity()).get(ScanViewModel::class.java)
         edtList = arrayListOf(
             binding.scanTietPerson,
             binding.scanTietToName,
@@ -82,31 +76,27 @@ class ScanFragment : Fragment() {
     @SuppressLint("InflateParams")
     private fun initView() {
         loadingDialog = LoadingDialog(requireContext())
-        // 增值税发票识别
-        binding.tvRecordScan.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                if (!checkTokenStatus()) {
-                    return
+        val launcher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result: Map<String, Boolean> ->
+                if (result[Manifest.permission.READ_EXTERNAL_STORAGE] != null && result[Manifest.permission.READ_EXTERNAL_STORAGE] == true) {
+                    //权限全部获取到之后的动作
+                    pickPicture()
+                } else {
+                    //有权限没有获取到的动作
+                    show("有权限被拒绝！")
                 }
-                val intent = Intent(requireActivity(), CameraActivity::class.java)
-                intent.putExtra(
-                    CameraActivity.KEY_OUTPUT_FILE_PATH,
-                    FileUtil.getSaveFile(requireContext()).absolutePath
-                )
-                intent.putExtra(
-                    CameraActivity.KEY_CONTENT_TYPE,
-                    CameraActivity.CONTENT_TYPE_GENERAL
-                )
-                startActivityForResult(intent, requestCodeVatInvoice)
             }
-        })
+
+        // 增值税发票识别
+        binding.tvRecordScan.setOnClickListener {
+            launcher.launch(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            )
+        }
 
         binding.tvRecordSave.setOnClickListener {
-            val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            val flag = requireActivity().checkSelfPermission(permission)
-            if (flag == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(arrayOf(permission), 0)
-            }
             if (scanFlag) {
                 saveEdit()
                 val currentRealBean = scanViewModel.currentBeanLiveData
@@ -121,25 +111,22 @@ class ScanFragment : Fragment() {
                                 setTitle("保存")
                                 setMessage("确认数据无误？")
                                 setButton(DialogInterface.BUTTON_POSITIVE, "确定") { p0, _ ->
-                                    requireActivity().lifecycleScope.launch {
-                                        withContext(Dispatchers.IO) {
-                                            val isExist = scanViewModel.isExist(realBean.fpNumber!!)
-                                            if (isExist!!) {
-                                                val count = scanViewModel.updateBeansToDb()
-                                                if (count != 0)
-                                                    withContext(Dispatchers.Main) {
-                                                        show("该发票已被扫描过，已更新！")
-                                                    }
-                                                else
-                                                    withContext(Dispatchers.Main) {
-                                                        show("发票信息更新失败，请重试！")
-                                                    }
-
-                                            } else {
-                                                scanViewModel.addBeanToDb()
-                                                withContext(Dispatchers.Main) {
-                                                    show("该发票未被扫描过，已保存！")
-                                                }
+                                    scanViewModel.updateToDb().apply {
+                                        when (this) {
+                                            EnumSaveFlag.FLAG_ADD -> {
+                                                show("保存成功")
+                                            }
+                                            EnumSaveFlag.FLAG_ADD_FAILURE -> {
+                                                show("保存失败")
+                                            }
+                                            EnumSaveFlag.FLAG_UPDATE -> {
+                                                show("更新成功")
+                                            }
+                                            EnumSaveFlag.FLAG_UPDATE_FAILURE -> {
+                                                show("更新失败")
+                                            }
+                                            else -> {
+                                                show("操作无效")
                                             }
                                         }
                                     }
@@ -162,7 +149,34 @@ class ScanFragment : Fragment() {
         binding.tvRecordClear.setOnClickListener {
             clearAllText()
         }
-        initAccessToken()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        var selectedImage: ByteArray?
+        // 使用ActivityResultLauncher注册图库返回的结果
+        galleryResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK && result.data != null) {
+                    val imageUri = result.data?.data
+                    val inputStream = requireActivity().contentResolver.openInputStream(imageUri!!)
+                    selectedImage = inputStream?.readBytes()
+                    // 对选择的图片进行base64加密
+                    //val base64String = Base64.getEncoder().encodeToString(selectedImage)
+                    //println("Base64加密结果: $base64String")
+                    onPickResult(Base64Util.encode(selectedImage))
+                }
+            }
+    }
+
+    private fun pickPicture() {
+        // 使用ActivityResultLauncher注册图库返回的结果
+        // 创建一个启动图库的Intent
+        val galleryIntent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*"
+        }
+        galleryResultLauncher.launch(galleryIntent)
     }
 
     private fun getToPerson(): String? {
@@ -249,87 +263,43 @@ class ScanFragment : Fragment() {
         )
     }
 
-    private fun checkTokenStatus(): Boolean {
-        if (!hasGotToken) {
-            Toast.makeText(requireContext(), "Token还未成功获取", Toast.LENGTH_LONG).show()
-        }
-        return hasGotToken
-    }
-
-    //以license文件方式初始化
-    private fun initAccessToken() {
-        OCR.getInstance(requireContext()).initAccessToken(object : OnResultListener<AccessToken> {
-            override fun onResult(accessToken: AccessToken) {
-                val token = accessToken.accessToken
-                token.toString()
-                hasGotToken = true
-            }
-
-            override fun onError(error: OCRError) {
-                error.printStackTrace()
-                requireActivity().runOnUiThread {
-                    alertDialog?.setTitle("获取Token失败")
-                        ?.setMessage(error.message.toString())
-                        ?.setPositiveButton("确定", null)
-                        ?.show()
-                }
-            }
-        }, requireContext())
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun onPickResult(fpPicString: String) {
         // 识别成功回调，增值税发票
-        if (requestCode == requestCodeVatInvoice && resultCode == Activity.RESULT_OK) {
-            run {
-                loadingDialog.show()
-            }
-            val path = FileUtil.getSaveFile(requireContext()).absolutePath
-            RecognizeService.recVatInvoice(requireContext(), path) { result ->
-                run {
-                    if (result.isEmpty()) {
-                        scanFlag = false
-                    } else {
-                        try {
-                            val resFlag = analysisResult(result)
-                            if (resFlag) {
-                                run {
-                                    show("扫描成功！")
+        run {
+            loadingDialog.show()
+        }
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                HttpUtil.multipleInvoice(fpPicString)?.apply {
+                    withContext(Dispatchers.Main) {
+                        if (isEmpty()) {
+                            scanFlag = false
+                        } else {
+                            try {
+                                val resFlag = analysisResult(this@apply)
+                                if (resFlag) {
+                                    run {
+                                        show("扫描成功！")
+                                    }
+                                } else {
+                                    run {
+                                        show("扫描失败！")
+                                    }
                                 }
-                            } else {
+                            } catch (e: IndexOutOfBoundsException) {
                                 run {
-                                    show("扫描失败！")
+                                    show("扫描得到的结果有误，请重试！")
                                 }
-                            }
-                        } catch (e: IndexOutOfBoundsException) {
-                            run {
-                                show("扫描得到的结果有误，请重试！")
                             }
                         }
                     }
                 }
-                requireActivity().runOnUiThread {
-                    loadingDialog.dismiss()
-                }
-            }
-        } else {
-            run {
-                show("取消扫描！")
             }
         }
-    }
+        requireActivity().runOnUiThread {
+            loadingDialog.dismiss()
+        }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            initAccessToken()
-        } else {
-            Toast.makeText(requireContext(), "没有该权限则无法进行票据识别！", Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onDestroy() {

@@ -1,5 +1,6 @@
 package ki.zq.remfq.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import ki.zq.remfq.bean.RealBean
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,7 @@ interface RealBeanDao {
     fun getBean(number: String): RealBean?
 
     @Query("SELECT * FROM INVOICE ORDER BY ID DESC")
-    fun getAllBeans(): Flow<MutableList<RealBean>>
+    fun getAllBeans(): LiveData<MutableList<RealBean>>
 
     @Suppress("unused")
     @Query("SELECT * FROM INVOICE WHERE fpNumber LIKE :number")

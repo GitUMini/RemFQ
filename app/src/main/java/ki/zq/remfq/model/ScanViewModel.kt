@@ -4,8 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import ki.zq.remfq.bean.RealBean
 import ki.zq.remfq.db.RealBeanDB
+import ki.zq.remfq.enums.EnumSaveFlag
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ScanViewModel(application: Application) : AndroidViewModel(application) {
     private val _currentBeanMutableLiveData: MutableLiveData<RealBean> by lazy {
@@ -32,7 +37,32 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
     private val realBeanDB = RealBeanDB.getDatabase(application.applicationContext)
     private val ocrDao by lazy { realBeanDB?.ocrDao() }
-    fun updateBeansToDb() = ocrDao?.updateBeans(currentBeanLiveData.value)
-    fun isExist(number: String) = ocrDao?.isExist(number)
-    fun addBeanToDb() = ocrDao?.insertBeans(currentBeanLiveData.value)
+
+    private fun innerUpdateToDb() = ocrDao?.updateBeans(currentBeanLiveData.value)
+    fun updateToDb(): EnumSaveFlag {
+        var flag = EnumSaveFlag.FLAG_INITIAL
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                isExist(currentBeanLiveData.value?.fpNumber!!)?.also { existFlag ->
+                    if (existFlag) {
+                        innerUpdateToDb()?.also { updateFlag ->
+                            flag = withContext(Dispatchers.Main) {
+                                if (updateFlag != 0)
+                                    EnumSaveFlag.FLAG_UPDATE
+                                else
+                                    EnumSaveFlag.FLAG_UPDATE_FAILURE
+                            }
+                        }
+                    } else {
+                        addBeanToDb()
+                        flag = EnumSaveFlag.FLAG_ADD
+                    }
+                }
+            }
+        }
+        return flag
+    }
+
+    private fun isExist(number: String) = ocrDao?.isExist(number)
+    private fun addBeanToDb() = ocrDao?.insertBeans(currentBeanLiveData.value)
 }

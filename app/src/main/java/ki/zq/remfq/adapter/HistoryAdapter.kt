@@ -21,15 +21,11 @@ class HistoryAdapter : BaseQuickAdapter<RealBean, BaseViewHolder>(0) {
         )
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
-        //val realBeanItemHistoryBinding: ItemHistoryBinding? = DataBindingUtil.bind(holder.itemView)
-    }
-
     @SuppressLint("SetTextI18n")
     override fun convert(holder: BaseViewHolder, item: RealBean) {
         holder.setBackgroundColor(R.id.item_tv_time, getColor(R.color.md_theme_light_primary))
         holder.setTextColor(R.id.item_tv_time, getColor(R.color.white))
+
         holder.setText(R.id.item_tv_time, BaseUtil.longToString(item.fpDate!!))
         holder.setText(R.id.item_et_number, "发票号码: " + item.fpNumber)
         holder.setText(R.id.item_et_kpqy, "开票企业: " + item.fpFromCompanyName)

@@ -8,9 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ki.zq.remfq.R
@@ -21,9 +23,8 @@ import ki.zq.remfq.diffutil.HistoryDFC
 import ki.zq.remfq.model.HistoryViewModel
 import ki.zq.remfq.util.BaseUtil
 import ki.zq.remfq.util.ExcelUtils
-import ki.zq.remfq.util.FixLayoutManager
+import ki.zq.remfq.view.CpHistoryItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -34,12 +35,10 @@ class HistoryFragment : Fragment() {
         "开票企业识别号", "开票企业名称", "金额", "税额", "金额合计"
     )
     private lateinit var fapiaoList: ArrayList<ArrayList<String>>
+    private lateinit var historyAdapter: HistoryAdapter
     private var fileName: String? = null
 
-    private lateinit var historyAdapter: HistoryAdapter
-
-    private lateinit var historyViewModel: HistoryViewModel
-
+    private val historyViewModel by viewModels<HistoryViewModel>()
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
@@ -48,10 +47,19 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // _binding = FragmentHistoryBinding.inflate(layoutInflater)
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
-        historyViewModel = ViewModelProvider(requireActivity()).get(HistoryViewModel::class.java)
-        initViews()
+        _binding = FragmentHistoryBinding.inflate(inflater)
+        //initViews()
+        binding.historyComposeView.apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnLifecycleDestroyed(
+                    viewLifecycleOwner
+                )
+            )
+            setContent {
+                val items by historyViewModel.allBeans!!.observeAsState(emptyList())
+                CpHistoryItem(items)
+            }
+        }
         return binding.root
     }
 
@@ -116,18 +124,16 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        binding.recvSearchResult.apply {
-            layoutManager = FixLayoutManager(requireContext())
-            adapter = historyAdapter
-        }
+//        binding.recvSearchResult.apply {
+//            layoutManager = FixLayoutManager(requireContext())
+//            adapter = historyAdapter
+//        }
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                historyViewModel.getAllBeans()?.collect {
-                    withContext(Dispatchers.Main) {
-                        historyAdapter.setList(it)
-                    }
-                }
+//                historyViewModel.getAllBeans()?.observe(viewLifecycleOwner) {
+//                    historyAdapter.setList(it)
+//                }
             }
         }
     }

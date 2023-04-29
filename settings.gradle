@@ -1,3 +1,2 @@
-include ':ocr_ui'
 include ':app'
 rootProject.name = "RemFQ"

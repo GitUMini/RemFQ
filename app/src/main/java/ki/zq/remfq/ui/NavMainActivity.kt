@@ -1,15 +1,17 @@
 package ki.zq.remfq.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import ki.zq.remfq.BaseActivity
 import ki.zq.remfq.adapter.ViewPager2Adapter
 import ki.zq.remfq.databinding.ActivityNavMainBinding
 import ki.zq.remfq.fragment.HistoryFragment
 import ki.zq.remfq.fragment.ScanFragment
 import ki.zq.remfq.fragment.SettingsFragment
+import ki.zq.remfq.ocr.HttpUtil
+import ki.zq.remfq.util.BaseUtil
 import ki.zq.remfq.util.BnvMediator
 
-class NavMainActivity : AppCompatActivity() {
+class NavMainActivity : BaseActivity() {
 
     private var _binding: ActivityNavMainBinding? = null
     private val binding get() = _binding!!
@@ -35,6 +37,16 @@ class NavMainActivity : AppCompatActivity() {
                 vp2.isUserInputEnabled = true  //false:ViewPager2不能滑动
                 bnv.itemIconTintList = null  //显示BottomNavigationView的图标
             }.attach()
+        }
+
+        //multipleInvoice()
+        runOnIODispatcher {
+            BaseUtil.isOutDate().apply {
+                if (this) {
+                    println("Access_Token已过期，已重新获取!")
+                    HttpUtil.getAccessToken()
+                } else println("Access_Token未过期")
+            }
         }
     }
 
