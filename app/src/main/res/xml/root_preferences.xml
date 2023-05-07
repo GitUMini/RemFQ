@@ -7,8 +7,31 @@
         <EditTextPreference
             app:defaultValue="报销人员姓名"
             app:iconSpaceReserved="false"
-            app:key="toPerson"
-            app:title="@string/toPerson_title"
+            app:key="FPToPerson"
+            app:title="@string/prf_toPerson_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="单据编号"
+            app:iconSpaceReserved="false"
+            app:key="FPDocNumber"
+            app:title="@string/prf_docNumber_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="@string/prf_coastFor_title"
+            app:iconSpaceReserved="false"
+            app:key="FPCoastFor"
+            app:title="@string/prf_coastFor_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="IsClearAfterSave"
+            app:switchTextOff="不清除"
+            app:switchTextOn="清除"
+            app:title="@string/prf_clear_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

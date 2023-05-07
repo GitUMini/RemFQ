@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
@@ -6,8 +5,11 @@
         <entry key="..\:/Androids/RemFQ/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.2715" />
         <entry key="..\:/Androids/RemFQ/app/src/main/res/layout/activity_nav_main.xml" value="0.36614583333333334" />
         <entry key="..\:/Androids/RemFQ/app/src/main/res/layout/fragment_history.xml" value="0.36614583333333334" />
+        <entry key="..\:/Androids/RemFQ/app/src/main/res/layout/fragment_history1.xml" value="0.36614583333333334" />
         <entry key="..\:/Androids/RemFQ/app/src/main/res/layout/fragment_scan.xml" value="0.36614583333333334" />
+        <entry key="..\:/Androids/RemFQ/app/src/main/res/layout/fragment_scan2.xml" value="0.36614583333333334" />
         <entry key="..\:/Androids/RemFQ/app/src/main/res/layout/item_history.xml" value="0.36614583333333334" />
+        <entry key="..\:/Androids/RemFQ/app/src/main/res/xml/root_preferences.xml" value="0.36614583333333334" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/btn_style.xml" value="0.205" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/dialog_style_xml_color.xml" value="0.2985" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/fab_label_background.xml" value="0.2985" />
@@ -20,15 +22,21 @@
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_history_24.xml" value="0.1815" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2985" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.205" />
-        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_scan_24.xml" value="0.205" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_scan_24.xml" value="0.151" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.205" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1815" />
-        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_clear.xml" value="0.205" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_clear.xml" value="0.151" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_ffp.xml" value="0.235" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_fp.xml" value="0.235" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_invoice.xml" value="0.2985" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2985" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_muti_chooice.xml" value="0.151" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_muti_choose.xml" value="0.151" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_muti_select_pic.xml" value="0.151" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_output.xml" value="0.205" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_save.xml" value="0.151" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_single_chooice.xml" value="0.151" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/ic_single_choose.xml" value="0.151" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/drawable/shape_progress_bg.xml" value="0.2985" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/activity_edit.xml" value="0.337037037037037" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/activity_history.xml" value="0.3645833333333333" />
@@ -41,6 +49,7 @@
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_about.xml" value="0.3645833333333333" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_blank.xml" value="0.3645833333333333" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_history.xml" value="0.3645833333333333" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_list.xml" value="0.3645833333333333" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_record.xml" value="0.337037037037037" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_scan.xml" value="0.23703703703703705" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/fragment_search.xml" value="0.3645833333333333" />
@@ -49,6 +58,7 @@
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/item_scan.xml" value="0.3645833333333333" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/layout/item_search.xml" value="0.3645833333333333" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/menu/bottom_menu.xml" value="0.3645833333333333" />
+        <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/xml/file_paths.xml" value="0.3645833333333333" />
         <entry key="..\:/Developer/Codes/RemFQ/app/src/main/res/xml/root_preferences.xml" value="0.20416666666666666" />
       </map>
     </option>
@@ -94,10 +104,17 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.07281264914545253" />
+      </ProjectState>
+    </option>
   </component>
 </project>

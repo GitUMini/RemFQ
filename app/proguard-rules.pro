@@ -21,4 +21,4 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.baidu.ocr.sdk.*{*;}
 -dontwarn com.baidu.ocr.**
--keep class ki.zq.remfq.bean.*{*;}
+-keep class ki.zq.remfp.bean.*{*;}
