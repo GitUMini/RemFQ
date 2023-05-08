@@ -102,7 +102,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -124,7 +124,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -146,7 +146,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -168,7 +168,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -190,7 +190,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -212,7 +212,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -234,7 +234,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -256,7 +256,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeColor="@color/teal_200"
-                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/teal_200">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -283,7 +283,7 @@
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusTopStart="8dp"
                     app:boxStrokeColor="@color/teal_200"
-                    app:boxStrokeWidth="2dp"
+                    app:boxStrokeWidth="1dp"
                     app:hintTextColor="@color/teal_200">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -306,7 +306,7 @@
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusTopStart="8dp"
                     app:boxStrokeColor="@color/teal_200"
-                    app:boxStrokeWidth="2dp"
+                    app:boxStrokeWidth="1dp"
                     app:hintTextColor="@color/teal_200">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -329,7 +329,7 @@
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusTopStart="8dp"
                     app:boxStrokeColor="@color/teal_200"
-                    app:boxStrokeWidth="2dp"
+                    app:boxStrokeWidth="1dp"
                     app:hintTextColor="@color/teal_200">
 
                     <com.google.android.material.textfield.TextInputEditText

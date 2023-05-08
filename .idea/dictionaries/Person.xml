@@ -2,6 +2,10 @@
   <dictionary name="Person">
     <words>
       <w>baos</w>
+      <w>fileprovider</w>
+      <w>officedocument</w>
+      <w>openxmlformats</w>
+      <w>spreadsheetml</w>
       <w>viewmodel</w>
       <w>willfar</w>
     </words>

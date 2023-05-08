@@ -1,6 +1,7 @@
 package ki.zq.remfp.fragment
 
 import android.content.ContentResolver
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -46,6 +47,9 @@ class RecordFragment : Fragment(), View.OnClickListener {
     private val selected64s: MutableList<String> = arrayListOf()
 
     private var scanFlag = false
+    private var nextIndex = 0
+
+    private lateinit var mContext: Context
 
     private val launcherForSingleSelect =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -63,6 +67,7 @@ class RecordFragment : Fragment(), View.OnClickListener {
             }
             getResultFromNet()
             setEditAble(selected64s.isNotEmpty())
+            binding.btnRecordScanNext.visibility = View.GONE
         }
     private val launcherForMultipleSelect =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
@@ -75,12 +80,19 @@ class RecordFragment : Fragment(), View.OnClickListener {
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     val baos = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                    selected64s.add(baos.toByteArray().encode64())
+                    baos.toByteArray().encode64().apply {
+                        if (selected64s.contains(this)) {
+                            show("存在相同发票，已过滤！")
+                        } else {
+                            selected64s.add(this)
+                        }
+                    }
                 }
             }
             getResultFromNet()
             setEditAble(selected64s.isNotEmpty())
-            binding.btnRecordScanNext.visibility = View.VISIBLE
+            binding.btnRecordScanNext.visibility =
+                if (selected64s.size > 1) View.VISIBLE else View.GONE
         }
 
     override fun onCreateView(
@@ -89,6 +101,7 @@ class RecordFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecordBinding.inflate(inflater)
+        mContext = requireContext().applicationContext
 
         scanViewModel.saveFlagLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -114,6 +127,7 @@ class RecordFragment : Fragment(), View.OnClickListener {
         binding.tvRecordScanMultiple.setOnClickListener(this)
         binding.tvRecordScanSave.setOnClickListener(this)
         binding.tvRecordScanClear.setOnClickListener(this)
+        binding.btnRecordScanNext.setOnClickListener(this)
         scanViewModel.currentBeanLiveData.observe(viewLifecycleOwner) {
             for (i in textInputLayouts.indices) {
                 textInputLayouts[i].editText?.setText(it.toStringList()[i])
@@ -163,7 +177,7 @@ class RecordFragment : Fragment(), View.OnClickListener {
             scanFlag = false
         } else {
             run {
-                show("没有任何内容！")
+                show("当前没有任何内容！")
             }
         }
     }
@@ -238,7 +252,7 @@ class RecordFragment : Fragment(), View.OnClickListener {
                     if (beanList.size == 1) scanViewModel.setCurrentRealBean(beanList[0])
                     else {
                         scanViewModel.setCurrentRealBeanList(beanList)
-                        scanViewModel.setCurrentRealBean(beanList[0])
+                        scanViewModel.setCurrentRealBean(beanList[nextIndex])
                     }
                 }
             }
@@ -264,10 +278,16 @@ class RecordFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_record_scan_single -> {
+                if (scanFlag) {
+                    clearAllText()
+                }
                 launcherForSingleSelect.launch("image/*")
             }
 
             R.id.tv_record_scan_multiple -> {
+                if (scanFlag) {
+                    clearAllText()
+                }
                 launcherForMultipleSelect.launch("image/*")
             }
 
@@ -280,23 +300,27 @@ class RecordFragment : Fragment(), View.OnClickListener {
                             if (isNotEmpty()) {
                                 show("请检查《$this》是否正确！")
                             } else {
-                                val builder = MaterialAlertDialogBuilder(requireContext()).create()
-                                builder.apply {
-                                    setCancelable(false)
-                                    setTitle("保存")
-                                    setMessage("确认数据无误？")
-                                    setButton(DialogInterface.BUTTON_POSITIVE, "确定") { p0, _ ->
-                                        requireActivity().lifecycleScope.launch {
-                                            withContext(Dispatchers.IO) {
-                                                scanViewModel.saveToDb()
-                                            }
+                                val builder = MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("保存")
+                                    .setCancelable(false)
+                                    .setMessage("确认数据无误？").create()
+                                builder.setButton(
+                                    DialogInterface.BUTTON_POSITIVE,
+                                    "确定"
+                                ) { dialog, _ ->
+                                    lifecycleScope.launch {
+                                        withContext(Dispatchers.IO) {
+                                            scanViewModel.saveToDb()
                                         }
-                                        p0.dismiss()
                                     }
-                                    setButton(DialogInterface.BUTTON_NEGATIVE, "取消") { p0, _ ->
-                                        show("取消！")
-                                        p0?.dismiss()
-                                    }
+                                    dialog?.dismiss()
+                                }
+                                builder.setButton(
+                                    DialogInterface.BUTTON_NEGATIVE,
+                                    "取消"
+                                ) { dialog, _ ->
+                                    show("取消保存！")
+                                    dialog?.dismiss()
                                 }
                                 builder.show()
                             }
@@ -308,11 +332,16 @@ class RecordFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.tv_record_scan_clear -> {
-                if (scanFlag) {
-                    clearAllText()
-                    scanFlag = false
-                } else
-                    show("当前已无数据")
+                clearAllText()
+            }
+
+            R.id.btn_record_scan_next -> {
+                if (nextIndex < beanList.size) {
+                    nextIndex++
+                    scanViewModel.setCurrentRealBean(beanList[nextIndex])
+                } else {
+                    show("已经是最后一张了！")
+                }
             }
         }
     }

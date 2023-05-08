@@ -8,6 +8,7 @@
     <string name="str_export">导出</string>
     <string name="str_clear">清除内容</string>
     <string name="str_search">查询</string>
+    <string name="str_output_path">导出位置：/storage/emulated/0/Android/data/ki.zq.remfp/files/</string>
 
     <string name="str_detail">详细信息</string>
     <string name="str_edit">编辑内容</string>

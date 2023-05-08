@@ -7,7 +7,6 @@ import ki.zq.remfp.adapter.ViewPager2Adapter
 import ki.zq.remfp.databinding.ActivityNavMainBinding
 import ki.zq.remfp.fragment.HistoryFragment
 import ki.zq.remfp.fragment.RecordFragment
-import ki.zq.remfp.fragment.ScanFragment
 import ki.zq.remfp.fragment.SettingsFragment
 import ki.zq.remfp.ocr.HttpUtil
 import ki.zq.remfp.util.BaseUtil
