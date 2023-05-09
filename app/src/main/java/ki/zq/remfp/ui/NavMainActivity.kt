@@ -9,7 +9,7 @@ import ki.zq.remfp.fragment.HistoryFragment
 import ki.zq.remfp.fragment.RecordFragment
 import ki.zq.remfp.fragment.SettingsFragment
 import ki.zq.remfp.ocr.HttpUtil
-import ki.zq.remfp.util.BaseUtil
+import ki.zq.remfp.util.BaseUtils
 import ki.zq.remfp.util.BnvMediator
 
 class NavMainActivity : BaseActivity() {
@@ -41,7 +41,7 @@ class NavMainActivity : BaseActivity() {
         }
 
         runOnIODispatcher {
-            BaseUtil.isOutDate().apply {
+            BaseUtils.isOutDate().apply {
                 if (this) {
                     runOnMainDispatcher {
                         Toast.makeText(applicationContext, "Token过期，已重新获取！", Toast.LENGTH_SHORT).show()

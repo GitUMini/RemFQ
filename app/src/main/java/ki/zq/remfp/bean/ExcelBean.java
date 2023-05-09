@@ -474,5 +474,47 @@ public class ExcelBean {
             this.word = word;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ExcelBean{" +
+                "AmountInWords='" + AmountInWords + '\'' +
+                ", NoteDrawer='" + NoteDrawer + '\'' +
+                ", SellerAddress='" + SellerAddress + '\'' +
+                ", SellerRegisterNum='" + SellerRegisterNum + '\'' +
+                ", MachineCode='" + MachineCode + '\'' +
+                ", Remarks='" + Remarks + '\'' +
+                ", SellerBank='" + SellerBank + '\'' +
+                ", TotalTax='" + TotalTax + '\'' +
+                ", CheckCode='" + CheckCode + '\'' +
+                ", InvoiceCode='" + InvoiceCode + '\'' +
+                ", InvoiceDate='" + InvoiceDate + '\'' +
+                ", PurchaserRegisterNum='" + PurchaserRegisterNum + '\'' +
+                ", InvoiceTypeOrg='" + InvoiceTypeOrg + '\'' +
+                ", Password='" + Password + '\'' +
+                ", Agent='" + Agent + '\'' +
+                ", AmountInFiguers='" + AmountInFiguers + '\'' +
+                ", PurchaserBank='" + PurchaserBank + '\'' +
+                ", Checker='" + Checker + '\'' +
+                ", City='" + City + '\'' +
+                ", TotalAmount='" + TotalAmount + '\'' +
+                ", PurchaserName='" + PurchaserName + '\'' +
+                ", Province='" + Province + '\'' +
+                ", InvoiceType='" + InvoiceType + '\'' +
+                ", SheetNum='" + SheetNum + '\'' +
+                ", PurchaserAddress='" + PurchaserAddress + '\'' +
+                ", Payee='" + Payee + '\'' +
+                ", SellerName='" + SellerName + '\'' +
+                ", InvoiceNum='" + InvoiceNum + '\'' +
+                ", CommodityPrice=" + CommodityPrice +
+                ", CommodityNum=" + CommodityNum +
+                ", CommodityTaxRate=" + CommodityTaxRate +
+                ", CommodityAmount=" + CommodityAmount +
+                ", CommodityType=" + CommodityType +
+                ", CommodityTax=" + CommodityTax +
+                ", CommodityUnit=" + CommodityUnit +
+                ", CommodityName=" + CommodityName +
+                '}';
+    }
 }
 

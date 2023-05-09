@@ -15,7 +15,7 @@ import java.util.Base64
 import java.util.Date
 import java.util.Locale
 
-object BaseUtil {
+object BaseUtils {
     fun longToString(time: Long): String = run {
         val format = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
         val date = Date(time)

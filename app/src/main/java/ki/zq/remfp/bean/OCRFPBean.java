@@ -1,5 +1,7 @@
 package ki.zq.remfp.bean;
 
+import androidx.annotation.NonNull;
+
 public class OCRFPBean {
 
     private ExcelBean words_result;
@@ -28,5 +30,15 @@ public class OCRFPBean {
 
     public void setWords_result_num(int words_result_num) {
         this.words_result_num = words_result_num;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "OCRFPBean{" +
+                "words_result=" + words_result +
+                ", log_id=" + log_id +
+                ", words_result_num=" + words_result_num +
+                '}';
     }
 }

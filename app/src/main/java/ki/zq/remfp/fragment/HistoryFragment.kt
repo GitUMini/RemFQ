@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import ki.zq.remfp.BuildConfig
 import ki.zq.remfp.R
 import ki.zq.remfp.adapter.HistoryAdapter
 import ki.zq.remfp.bean.RealBean
@@ -55,10 +54,16 @@ class HistoryFragment : Fragment() {
                 if (it > 0) show("删除成功")
             }
         }
-        binding.fabSearchOutput.setOnClickListener {
+        initViews()
+        initListener()
+        return binding.root
+    }
+
+    private fun initListener() {
+        binding.btnHistoryOperationOutput.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(requireContext()).create()
             builder.setCancelable(false)
-            builder.setMessage("导出数据？")
+            builder.setTitle("导出数据？")
             builder.setButton(DialogInterface.BUTTON_POSITIVE, "确定") { p0, _ ->
                 try {
                     if (getRecordData().isEmpty()) {
@@ -76,8 +81,9 @@ class HistoryFragment : Fragment() {
             }
             builder.show()
         }
-        initViews()
-        return binding.root
+        binding.btnHistoryOperationShare.setOnClickListener {
+            share2Wechat()
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -140,17 +146,21 @@ class HistoryFragment : Fragment() {
 
     private fun share2Wechat() {
         val file = File(requireActivity().getExternalFilesDir(null), "taizhang.xlsx")
-        val uri = FileProvider.getUriForFile(
-            requireContext(),
-            "${BuildConfig.APPLICATION_ID}.fileprovider",
-            file
-        )
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.setPackage("com.tencent.mm")
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        startActivity(Intent.createChooser(intent, "分享台账文件"))
+        if (!file.exists()) {
+            show("台账文件不存在，请先导出再分享！")
+        } else {
+            val uri = FileProvider.getUriForFile(
+                requireContext(),
+                "ki.zq.remfp.fileprovider",
+                file
+            )
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            intent.putExtra(Intent.EXTRA_STREAM, uri)
+            intent.setPackage("com.tencent.mm")
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(Intent.createChooser(intent, "分享台账文件"))
+        }
     }
 
     //导出excel
@@ -165,7 +175,6 @@ class HistoryFragment : Fragment() {
         ExcelUtils.writeObjListToExcel(getRecordData(), fileName!!).apply {
             if (this) {
                 show("导出成功！")
-                share2Wechat()
             } else show("导出失败，请检查！")
         }
     }

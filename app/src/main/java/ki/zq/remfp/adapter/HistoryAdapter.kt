@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import ki.zq.remfp.R
 import ki.zq.remfp.bean.RealBean
-import ki.zq.remfp.util.BaseUtil
 
 class HistoryAdapter : BaseQuickAdapter<RealBean, BaseViewHolder>(0) {
     private fun getColor(id: Int): Int {
@@ -26,7 +25,7 @@ class HistoryAdapter : BaseQuickAdapter<RealBean, BaseViewHolder>(0) {
         holder.setBackgroundColor(R.id.item_tv_time, getColor(R.color.md_theme_light_primary))
         holder.setTextColor(R.id.item_tv_time, getColor(R.color.white))
 
-        holder.setText(R.id.item_tv_time, item.fpDate)
+        holder.setText(R.id.item_tv_time, "开票时间: " + item.fpDate)
         holder.setText(R.id.item_et_number, "发票号码: " + item.fpNumber)
         holder.setText(R.id.item_et_kpqy, "开票企业: " + item.fpFromCompanyName)
         holder.setText(R.id.item_et_zjj, "开票金额: " + item.fpAll)

@@ -3,7 +3,6 @@ package ki.zq.remfp.bean
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ki.zq.remfp.util.BaseUtil
 
 @Entity(tableName = "INVOICE")
 class RealBean {

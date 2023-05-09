@@ -2,7 +2,7 @@ package ki.zq.remfp.ocr
 
 import com.google.gson.Gson
 import ki.zq.remfp.bean.OCRTokenBean
-import ki.zq.remfp.util.BaseUtil
+import ki.zq.remfp.util.BaseUtils
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -76,7 +76,7 @@ object HttpUtil {
             val contentType = "application/x-www-form-urlencoded"
             val imgParam = URLEncoder.encode(imgStr, "UTF-8")
             val param = "image=$imgParam"
-            BaseUtil.getToken()?.also { token ->
+            BaseUtils.getToken()?.also { token ->
                 return post(url, token, contentType, param)
             }
         } catch (e: Exception) {
@@ -98,7 +98,7 @@ object HttpUtil {
                 false
             } else {
                 val tokenInfo = Gson().fromJson(result, OCRTokenBean::class.java)
-                BaseUtil.saveToken(tokenInfo.access_token)
+                BaseUtils.saveToken(tokenInfo.access_token)
                 true
             }
         }

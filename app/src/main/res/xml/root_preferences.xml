@@ -29,9 +29,14 @@
             app:defaultValue="false"
             app:iconSpaceReserved="false"
             app:key="IsClearAfterSave"
-            app:switchTextOff="不清除"
-            app:switchTextOn="清除"
             app:title="@string/prf_clear_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="IsEnableBase64"
+            app:title="@string/prf_base64_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

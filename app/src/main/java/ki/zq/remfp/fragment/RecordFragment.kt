@@ -26,8 +26,8 @@ import ki.zq.remfp.enums.EnumSaveFlag.FLAG_ADD_SUCCESS
 import ki.zq.remfp.enums.EnumSaveFlag.FLAG_IS_EXIST
 import ki.zq.remfp.model.ScanViewModel
 import ki.zq.remfp.ocr.HttpUtil
-import ki.zq.remfp.util.BaseUtil
-import ki.zq.remfp.util.BaseUtil.encode64
+import ki.zq.remfp.util.BaseUtils
+import ki.zq.remfp.util.BaseUtils.encode64
 import ki.zq.remfp.util.BeanUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,40 +59,45 @@ class RecordFragment : Fragment(), View.OnClickListener {
                 // 将 URI 转换为 Bitmap，并将其编码为 Base64 字符串
                 val inputStream = contentResolver.openInputStream(uri)
                 if (inputStream != null) {
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val bitmap = resizeBitmap(BitmapFactory.decodeStream(inputStream))
                     val baos = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                     selected64s.add(baos.toByteArray().encode64())
                 }
+                getResultFromNet()
+                setEditAble(selected64s.isNotEmpty())
+            } else {
+                show("没有选择任何发票图片！")
             }
-            getResultFromNet()
-            setEditAble(selected64s.isNotEmpty())
-            binding.btnRecordScanNext.visibility = View.GONE
         }
     private val launcherForMultipleSelect =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
-            for (i in uris.indices) {
-                // 获取 ContentResolver
-                val contentResolver: ContentResolver = requireActivity().contentResolver
-                // 将 URI 转换为 Bitmap，并将其编码为 Base64 字符串
-                val inputStream = contentResolver.openInputStream(uris[i])
-                if (inputStream != null) {
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    val baos = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                    baos.toByteArray().encode64().apply {
-                        if (selected64s.contains(this)) {
-                            show("存在相同发票，已过滤！")
-                        } else {
-                            selected64s.add(this)
+            if (uris.isNotEmpty()) {
+                for (i in uris.indices) {
+                    // 获取 ContentResolver
+                    val contentResolver: ContentResolver = requireActivity().contentResolver
+                    // 将 URI 转换为 Bitmap，并将其编码为 Base64 字符串
+                    val inputStream = contentResolver.openInputStream(uris[i])
+                    if (inputStream != null) {
+                        val bitmap = resizeBitmap(BitmapFactory.decodeStream(inputStream))
+                        val baos = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        baos.toByteArray().encode64().apply {
+                            if (selected64s.contains(this)) {
+                                show("存在相同发票，已过滤！")
+                            } else {
+                                selected64s.add(this)
+                            }
                         }
                     }
                 }
+                getResultFromNet()
+                setEditAble(selected64s.isNotEmpty())
+                binding.recordLlcOperation.visibility =
+                    if (selected64s.size > 1) View.VISIBLE else View.GONE
+            } else {
+                show("没有选择任何发票图片！")
             }
-            getResultFromNet()
-            setEditAble(selected64s.isNotEmpty())
-            binding.btnRecordScanNext.visibility =
-                if (selected64s.size > 1) View.VISIBLE else View.GONE
         }
 
     override fun onCreateView(
@@ -103,6 +108,20 @@ class RecordFragment : Fragment(), View.OnClickListener {
         _binding = FragmentRecordBinding.inflate(inflater)
         mContext = requireContext().applicationContext
 
+        initViews()
+        initListener()
+        initLiveDataObserver()
+        return binding.root
+    }
+
+    private fun resizeBitmap(bitmap: Bitmap): Bitmap {
+        return if ((bitmap.width > 4096) or (bitmap.height > 4096)) {
+            Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
+        } else
+            bitmap
+    }
+
+    private fun initLiveDataObserver() {
         scanViewModel.saveFlagLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 FLAG_ADD_SUCCESS -> {
@@ -122,18 +141,20 @@ class RecordFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
-        initViews()
-        binding.tvRecordScanSingle.setOnClickListener(this)
-        binding.tvRecordScanMultiple.setOnClickListener(this)
-        binding.tvRecordScanSave.setOnClickListener(this)
-        binding.tvRecordScanClear.setOnClickListener(this)
-        binding.btnRecordScanNext.setOnClickListener(this)
         scanViewModel.currentBeanLiveData.observe(viewLifecycleOwner) {
             for (i in textInputLayouts.indices) {
                 textInputLayouts[i].editText?.setText(it.toStringList()[i])
             }
         }
-        return binding.root
+    }
+
+    private fun initListener() {
+        binding.tvRecordScanSingle.setOnClickListener(this)
+        binding.tvRecordScanMultiple.setOnClickListener(this)
+        binding.tvRecordScanSave.setOnClickListener(this)
+        binding.tvRecordScanClear.setOnClickListener(this)
+        binding.btnRecordScanPrevious.setOnClickListener(this)
+        binding.btnRecordScanNext.setOnClickListener(this)
     }
 
     private fun initViews() {
@@ -157,7 +178,7 @@ class RecordFragment : Fragment(), View.OnClickListener {
         var resultBean: RealBean? = null
         try {
             resultBean =
-                BeanUtils.switchOCRBean2RealBean(ins, BaseUtil.getFPToPerson(requireContext()))
+                BeanUtils.switchOCRBean2RealBean(ins, BaseUtils.getFPToPerson(requireContext()))
             scanViewModel.setCurrentRealBean(resultBean)
         } catch (e: JsonSyntaxException) {
             e.printStackTrace()
@@ -168,12 +189,15 @@ class RecordFragment : Fragment(), View.OnClickListener {
         return resultBean
     }
 
-    private fun clearAllText() {
+    private fun clearAll() {
         if (scanFlag) {
             textInputLayouts.forEach {
                 it.editText?.setText("")
             }
             setEditAble(false)
+            selected64s.clear()
+            beanList.clear()
+            binding.recordLlcOperation.visibility = View.GONE
             scanFlag = false
         } else {
             run {
@@ -278,15 +302,18 @@ class RecordFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_record_scan_single -> {
+                binding.recordLlcOperation.visibility = View.GONE
+                selected64s.clear()
                 if (scanFlag) {
-                    clearAllText()
+                    clearAll()
                 }
                 launcherForSingleSelect.launch("image/*")
             }
 
             R.id.tv_record_scan_multiple -> {
+                selected64s.clear()
                 if (scanFlag) {
-                    clearAllText()
+                    clearAll()
                 }
                 launcherForMultipleSelect.launch("image/*")
             }
@@ -296,14 +323,14 @@ class RecordFragment : Fragment(), View.OnClickListener {
                     saveEdit()
                     val currentRealBean = scanViewModel.currentBeanLiveData
                     currentRealBean.value?.also { realBean ->
-                        BaseUtil.checkFPData(realBean).apply {
+                        BaseUtils.checkFPData(realBean).apply {
                             if (isNotEmpty()) {
                                 show("请检查《$this》是否正确！")
                             } else {
                                 val builder = MaterialAlertDialogBuilder(requireContext())
-                                    .setTitle("保存")
+                                    .setTitle("即将保存，确认数据无误？")
                                     .setCancelable(false)
-                                    .setMessage("确认数据无误？").create()
+                                    .create()
                                 builder.setButton(
                                     DialogInterface.BUTTON_POSITIVE,
                                     "确定"
@@ -332,13 +359,24 @@ class RecordFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.tv_record_scan_clear -> {
-                clearAllText()
+                clearAll()
+            }
+
+            R.id.btn_record_scan_previous -> {
+                if (nextIndex > 0) {
+                    nextIndex--
+                    scanViewModel.setCurrentRealBean(beanList[nextIndex])
+                    show("当前${(nextIndex + 1)}张发票")
+                } else {
+                    show("已经是第一张了！")
+                }
             }
 
             R.id.btn_record_scan_next -> {
-                if (nextIndex < beanList.size) {
+                if (nextIndex < beanList.size - 1) {
                     nextIndex++
                     scanViewModel.setCurrentRealBean(beanList[nextIndex])
+                    show("当前${(nextIndex + 1)}张发票")
                 } else {
                     show("已经是最后一张了！")
                 }

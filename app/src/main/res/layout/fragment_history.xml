@@ -5,20 +5,32 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <TextView
-        android:id="@+id/tv_save_path"
-        android:layout_width="0dp"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/history_operation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="3dp"
-        android:paddingTop="2dp"
-        android:paddingEnd="3dp"
-        android:paddingBottom="2dp"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:text="@string/str_output_path"
+        android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_history_operation_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/str_history_operation_output" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_history_operation_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/str_history_operation_share" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
         android:id="@+id/space"
@@ -30,7 +42,7 @@
         android:background="@color/half_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_save_path" />
+        app:layout_constraintTop_toBottomOf="@+id/history_operation" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/history_recyclerView"
@@ -43,16 +55,4 @@
         app:layout_constraintTop_toBottomOf="@+id/space">
 
     </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_search_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:contentDescription="@string/str_export"
-        android:src="@drawable/ic_baseline_output_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

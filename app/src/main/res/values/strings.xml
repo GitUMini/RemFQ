@@ -11,10 +11,9 @@
     <string name="str_output_path">导出位置：/storage/emulated/0/Android/data/ki.zq.remfp/files/</string>
 
     <string name="str_detail">详细信息</string>
-    <string name="str_edit">编辑内容</string>
-    <string name="str_delete">删除</string>
-    <string name="str_select">选择</string>
-    <string name="str_selected">已选</string>
+
+    <string name="str_history_operation_share">分享台账</string>
+    <string name="str_history_operation_output">导出记录</string>
 
     <string name="str_searchByTime">按开票时间查询</string>
     <string name="str_searchAll">查询全部</string>
@@ -37,6 +36,7 @@
     <string name="str_scan_index9">金额</string>
     <string name="str_scan_index10">税额</string>
     <string name="str_scan_index11">总计</string>
+    <string name="str_scan_previous">上一张</string>
     <string name="str_scan_next">下一张</string>
 
     <string name="str_time_division">-</string>
@@ -49,5 +49,6 @@
     <string name="prf_toPerson_title">报销人员</string>
     <string name="prf_docNumber_title">单据编号</string>
     <string name="prf_coastFor_title">费用说明</string>
-    <string name="prf_clear_title">保存后清除页面</string>
+    <string name="prf_clear_title">保存信息后清除页面</string>
+    <string name="prf_base64_title">保存Base64编码记录</string>
 </resources>

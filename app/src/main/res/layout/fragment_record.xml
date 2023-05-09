@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/str_scan_multiple"
-                app:drawableTopCompat="@drawable/ic_muti_choose" />
+                app:drawableTopCompat="@drawable/ic_multiple_choose" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_record_scan_save"
@@ -61,18 +61,34 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.google.android.material.card.MaterialCardView>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_record_scan_next"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_margin="6dp"
-        android:background="@drawable/btn_style"
-        android:text="@string/str_scan_next"
-        android:textColor="@color/white"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/record_llc_operation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/action_container" />
+        app:layout_constraintTop_toBottomOf="@+id/action_container">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_record_scan_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:text="@string/str_scan_previous"
+            android:textColor="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_record_scan_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/str_scan_next"
+            android:textColor="@color/white" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
@@ -80,7 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_record_scan_next">
+        app:layout_constraintTop_toBottomOf="@+id/record_llc_operation">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/scan_layout_result"
